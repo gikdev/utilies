@@ -6,21 +6,50 @@ export interface LogOptions extends Record<string, unknown> {
 }
 
 export interface ILogger {
+  /**
+   * Writes a log entry with the specified log level.
+   * Usually not called directly — prefer the level-specific methods.
+   */
   log(level: LogLevel, message: string, options?: LogOptions): void
-  logTrace(message: string, options?: LogOptions): void
-  logDebug(message: string, options?: LogOptions): void
-  logInfo(message: string, options?: LogOptions): void
-  logWarn(message: string, options?: LogOptions): void
-  logError(message: string, options?: LogOptions): void
-  logCritical(message: string, options?: LogOptions): void
+
+  /** Logs highly detailed diagnostic information.  */
+  trace(message: string, options?: LogOptions): void
+
+  /** Logs debugging information useful during development.  */
+  debug(message: string, options?: LogOptions): void
+
+  /** Logs general application flow information.  */
+  info(message: string, options?: LogOptions): void
+
+  /** Logs warnings for unexpected but recoverable situations.  */
+  warn(message: string, options?: LogOptions): void
+
+  /** Logs errors caused by failed operations.  */
+  error(message: string, options?: LogOptions): void
+
+  /** Logs critical failures that may require immediate attention.  */
+  critical(message: string, options?: LogOptions): void
 }
 
 export interface LoggerOptions {
+  /**
+   * Minimum log level that will be emitted.
+   * Messages below this threshold are ignored.
+   * @default logLevels.INFO // 2
+   */
   minLogLevel: LogLevel
+
+  /**
+   * Providers to use.
+   * Providers (output targets) used to write log entries.
+   * Can include `ConsoleProvider` and custom providers.
+   * @default []
+   */
   providers: ILoggingProvider[]
 }
 
-const defaultLoggerOptions: LoggerOptions = {
+/** Default configuration used when no custom options are provided.  */
+export const defaultLoggerOptions: LoggerOptions = {
   minLogLevel: logLevels.INFO,
   providers: [],
 }
@@ -28,37 +57,53 @@ const defaultLoggerOptions: LoggerOptions = {
 export class Logger implements ILogger {
   private options: LoggerOptions
 
+  /**
+   * Initializes the logger with the given options.
+   * Merges user-specified options with defaults.
+   */
   constructor(options?: Partial<LoggerOptions>) {
     this.options = { ...defaultLoggerOptions, ...options }
   }
 
-  log(level: LogLevel, message: string, options?: LogOptions) {
+  /**
+   * Core logging method used by all level-specific helpers.
+   * Applies log level filtering and dispatches to all providers.
+   */
+  log(level: LogLevel, message: string, options?: LogOptions): void {
+    if (level < this.options.minLogLevel) return
+
     for (const provider of this.options.providers) {
       provider.log(level, message, options)
     }
   }
 
-  logTrace(message: string, options?: LogOptions): void {
+  /** Logs a TRACE-level message. */
+  trace(message: string, options?: LogOptions): void {
     this.log(logLevels.TRACE, message, options)
   }
 
-  logDebug(message: string, options?: LogOptions): void {
+  /** Logs a DEBUG-level message. */
+  debug(message: string, options?: LogOptions): void {
     this.log(logLevels.DEBUG, message, options)
   }
 
-  logInfo(message: string, options?: LogOptions): void {
+  /** Logs a INFO-level message. */
+  info(message: string, options?: LogOptions): void {
     this.log(logLevels.INFO, message, options)
   }
 
-  logWarn(message: string, options?: LogOptions): void {
+  /** Logs a WARN-level message. */
+  warn(message: string, options?: LogOptions): void {
     this.log(logLevels.WARNING, message, options)
   }
 
-  logError(message: string, options?: LogOptions): void {
+  /** Logs a ERROR-level message. */
+  error(message: string, options?: LogOptions): void {
     this.log(logLevels.ERROR, message, options)
   }
 
-  logCritical(message: string, options?: LogOptions): void {
+  /** Logs a CRITICAL-level message. */
+  critical(message: string, options?: LogOptions): void {
     this.log(logLevels.CRITICAL, message, options)
   }
 }

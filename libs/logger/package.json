@@ -1,26 +1,45 @@
 {
-  "name": "logger",
+  "name": "@gikdev/logger",
   "version": "1.0.0",
   "type": "module",
-  "private": true,
+  "description": "A .NET-inspired logging library for TypeScript/JavaScript",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "author": "Mohammad Mahdi",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
   },
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "keywords": [
+    "logger",
+    "typescript",
+    "logging",
+    "tslogger",
+    "dotnet"
+  ],
   "scripts": {
-    "dev": "rslib build --watch",
-    "build": "rslib build",
-    "test": "vitest run"
+    "dev": "rslib build -w -c .config/rslib.ts",
+    "build": "rslib build -c .config/rslib.ts",
+    "test": "vitest run -c .config/vitest.ts",
+    "docs": "typedoc",
+    "preview": "serve docs/",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@rslib/core": "^0.17.2",
     "@types/node": "^24.10.0",
+    "typedoc": "^0.28.14",
+    "typedoc-material-theme": "^1.4.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.8"
   }

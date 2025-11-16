@@ -1,24 +1,47 @@
 export const logLevels = {
-  /** Very detailed messages, mostly for debugging. */
+  /**
+   * Most detailed logging level.
+   * Used for diagnosing intricate issues and tracing every step of execution.
+   */
   TRACE: 0,
 
-  /** Debug-level messages, useful during development. */
+  /**
+   * Development-focused debugging information.
+   * Helpful for understanding control flow, state changes, and internal behavior.
+   */
   DEBUG: 1,
 
-  /** General information about app operation. */
+  /**
+   * High-level events that describe normal application behavior.
+   * Useful for understanding overall system activity.
+   */
   INFO: 2,
 
-  /** Something unexpected happened, but not critical. */
+  /**
+   * Something unexpected occurred, but the application can continue operating.
+   * Indicates potential problems or unusual states.
+   */
   WARNING: 3,
 
-  /** An error occurred that should be investigated. */
+  /**
+   * An operation failed or an error occurred.
+   * Should be investigated, but the system is still functioning.
+   */
   ERROR: 4,
 
-  /** Critical failure, application or system may be unstable. */
+  /**
+   * A severe failure that causes system instability or prevents further execution.
+   * Requires immediate attention.
+   */
   CRITICAL: 5,
 
-  /** Logging is disabled, no messages are logged. */
+  /**
+   * Logging disabled.
+   * No messages at or below this level will be emitted.
+   */
   NONE: 6,
 } as const
+
 export type LogLevelName = keyof typeof logLevels
+
 export type LogLevel = (typeof logLevels)[LogLevelName]
