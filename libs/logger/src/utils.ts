@@ -9,10 +9,10 @@ export function getLogLevelEmoji(logLevel: LogLevel) {
       return "🔎"
 
     case logLevels.INFO:
-      return "ℹ"
+      return "ℹ️"
 
     case logLevels.WARNING:
-      return "⚠"
+      return "⚠️"
 
     case logLevels.ERROR:
       return "❌"
